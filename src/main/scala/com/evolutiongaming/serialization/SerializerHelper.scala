@@ -5,23 +5,31 @@ import java.nio.charset.{Charset, StandardCharsets}
 
 object SerializerHelper {
 
+  val Utf8: Charset = StandardCharsets.UTF_8
+
+
   type Bytes = Array[Byte]
 
-  val Utf8: Charset = StandardCharsets.UTF_8
+  object Bytes {
+    val empty: Bytes = Array.empty
+  }
 
 
   implicit class ByteBufferOps(val self: ByteBuffer) extends AnyVal {
 
     def readBytes: Bytes = {
       val length = self.getInt()
-      val bytes = new Bytes(length)
-      self.get(bytes)
-      bytes
+      if (length == 0) Bytes.empty
+      else {
+        val bytes = new Bytes(length)
+        self.get(bytes)
+        bytes
+      }
     }
 
     def writeBytes(bytes: Bytes): Unit = {
       self.putInt(bytes.length)
-      self.put(bytes)
+      if (bytes.nonEmpty) self.put(bytes)
     }
 
     def readString: String = {

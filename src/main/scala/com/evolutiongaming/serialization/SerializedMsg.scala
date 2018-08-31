@@ -10,7 +10,9 @@ final case class SerializedMsg(identifier: Int, manifest: String, bytes: Bytes)
 
 
 trait SerializedMsgConverter extends Extension {
+
   def toMsg(msg: AnyRef): SerializedMsg
+  
   def fromMsg(msg: SerializedMsg): Try[AnyRef]
 }
 

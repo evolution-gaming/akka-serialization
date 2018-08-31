@@ -34,7 +34,7 @@ scalacOptions in (Compile,doc) ++= Seq("-groups", "-implicits", "-no-link-warnin
 resolvers += Resolver.bintrayRepo("evolutiongaming", "maven")
 
 libraryDependencies ++= Seq(
-  "com.typesafe.akka" %% "akka-actor" % "2.5.14",
+  "com.typesafe.akka" %% "akka-actor" % "2.5.16",
   "org.scalatest" %% "scalatest" % "3.0.5" % Test)
 
 licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
