@@ -11,7 +11,7 @@ object SerializerHelper {
   type Bytes = Array[Byte]
 
   object Bytes {
-    val empty: Bytes = Array.empty
+    val Empty: Bytes = Array.empty
   }
 
 
@@ -19,7 +19,7 @@ object SerializerHelper {
 
     def readBytes: Bytes = {
       val length = self.getInt()
-      if (length == 0) Bytes.empty
+      if (length == 0) Bytes.Empty
       else {
         val bytes = new Bytes(length)
         self.get(bytes)
