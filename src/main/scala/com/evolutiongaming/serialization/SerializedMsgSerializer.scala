@@ -1,7 +1,7 @@
 package com.evolutiongaming.serialization
 
 import java.io.NotSerializableException
-import java.lang.{Integer => JInt}
+import java.lang.{Integer => IntJ}
 import java.nio.ByteBuffer
 
 import akka.serialization.SerializerWithStringManifest
@@ -11,7 +11,7 @@ class SerializedMsgSerializer extends SerializerWithStringManifest {
 
   private val Manifest = "A"
 
-  def identifier: Int = 1403526138
+  def identifier = 1403526138
 
   def manifest(x: AnyRef): String = x match {
     case _: SerializedMsg => Manifest
@@ -42,7 +42,7 @@ object SerializedMsgSerializer {
   def toBinary(x: SerializedMsg): Bytes = {
     val manifest = x.manifest.getBytes(Utf8)
     val bytes = x.bytes
-    val buffer = ByteBuffer.allocate(JInt.BYTES + JInt.BYTES + manifest.length + JInt.BYTES + bytes.length)
+    val buffer = ByteBuffer.allocate(IntJ.BYTES + IntJ.BYTES + manifest.length + IntJ.BYTES + bytes.length)
     buffer.putInt(x.identifier)
     buffer.writeBytes(manifest)
     buffer.writeBytes(bytes)

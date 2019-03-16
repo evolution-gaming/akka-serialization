@@ -12,34 +12,33 @@ final case class SerializedMsg(identifier: Int, manifest: String, bytes: Bytes)
 trait SerializedMsgConverter extends Extension {
 
   def toMsg(msg: AnyRef): SerializedMsg
-  
+
   def fromMsg(msg: SerializedMsg): Try[AnyRef]
 }
 
 object SerializedMsgConverter {
-  def apply(serialization: Serialization): SerializedMsgConverter = {
-    new SerializedMsgConverter {
 
-      def toMsg(msg: AnyRef): SerializedMsg = {
-        msg match {
-          case msg: SerializedMsg => msg
-          case _             =>
-            val serializer = serialization.findSerializerFor(msg)
-            val bytes = serializer.toBinary(msg)
-            val manifest = serializer match {
-              case serializer: SerializerWithStringManifest => serializer.manifest(msg)
-              case _ if serializer.includeManifest          => msg.getClass.getName
-              case _                                        => ""
-            }
-            SerializedMsg(serializer.identifier, manifest, bytes)
-        }
-      }
+  def apply(serialization: Serialization): SerializedMsgConverter = new SerializedMsgConverter {
 
-      def fromMsg(msg: SerializedMsg) = {
-        import msg._
-        if (manifest.isEmpty) serialization.deserialize(bytes, identifier, None)
-        else serialization.deserialize(bytes, identifier, manifest)
+    def toMsg(msg: AnyRef): SerializedMsg = {
+      msg match {
+        case msg: SerializedMsg => msg
+        case _                  =>
+          val serializer = serialization.findSerializerFor(msg)
+          val bytes = serializer.toBinary(msg)
+          val manifest = serializer match {
+            case serializer: SerializerWithStringManifest => serializer.manifest(msg)
+            case _ if serializer.includeManifest          => msg.getClass.getName
+            case _                                        => ""
+          }
+          SerializedMsg(serializer.identifier, manifest, bytes)
       }
+    }
+
+    def fromMsg(msg: SerializedMsg) = {
+      import msg._
+      if (manifest.isEmpty) serialization.deserialize(bytes, identifier, None)
+      else serialization.deserialize(bytes, identifier, manifest)
     }
   }
 }
