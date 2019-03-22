@@ -1,7 +1,7 @@
 package com.evolutiongaming.serialization
 
-import com.evolutiongaming.serialization.SerializerHelper.Utf8
 import org.scalatest.{FunSuite, Matchers}
+import scodec.bits.ByteVector
 
 class ToBytesAbleSerializerSpec extends FunSuite with Matchers {
 
@@ -9,16 +9,16 @@ class ToBytesAbleSerializerSpec extends FunSuite with Matchers {
 
   test("toBinary & fromBinary for ToBytesAble.Raw") {
     val str = "value"
-    val expected = ToBytesAble(str)(_.getBytes(Utf8))
+    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).right.get)
     val actual = toAndFromBinary(expected)
-    new String(actual.bytes(), Utf8) shouldEqual str
+    actual.bytes.decodeUtf8.right.get shouldEqual str
   }
 
   test("toBinary & fromBinary for ToBytesAble.Bytes") {
     val str = "value"
-    val expected = ToBytesAble.Bytes(str.getBytes(Utf8))
+    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).right.get)
     val actual = toAndFromBinary(expected)
-    new String(actual.bytes(), Utf8) shouldEqual str
+    actual.bytes.decodeUtf8.right.get shouldEqual str
   }
 
   def toAndFromBinary[T <: AnyRef](msg: T): T = {

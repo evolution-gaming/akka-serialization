@@ -3,7 +3,7 @@ package com.evolutiongaming.serialization
 import java.io.NotSerializableException
 
 import akka.serialization.SerializerWithStringManifest
-import com.evolutiongaming.serialization.SerializerHelper._
+import scodec.bits.ByteVector
 
 
 class ToBytesAbleSerializer extends SerializerWithStringManifest {
@@ -17,16 +17,16 @@ class ToBytesAbleSerializer extends SerializerWithStringManifest {
     case _              => illegalArgument(s"Cannot serialize message of ${ x.getClass } in ${ getClass.getName }")
   }
 
-  def toBinary(x: AnyRef): Bytes = {
+  def toBinary(x: AnyRef) = {
     x match {
-      case x: ToBytesAble => x.bytes()
+      case x: ToBytesAble => x.bytes.toArray
       case _              => illegalArgument(s"Cannot serialize message of ${ x.getClass } in ${ getClass.getName }")
     }
   }
 
-  def fromBinary(bytes: Bytes, manifest: String): AnyRef = {
+  def fromBinary(bytes: Array[Byte], manifest: String): AnyRef = {
     manifest match {
-      case Manifest => ToBytesAble.Bytes(bytes)
+      case Manifest => ToBytesAble.Bytes(ByteVector.view(bytes))
       case _        => notSerializable(s"Cannot deserialize message for manifest $manifest in ${ getClass.getName }")
     }
   }

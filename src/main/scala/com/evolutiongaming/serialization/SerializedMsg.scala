@@ -2,11 +2,11 @@ package com.evolutiongaming.serialization
 
 import akka.actor.{ExtendedActorSystem, Extension, ExtensionId}
 import akka.serialization.{Serialization, SerializationExtension, SerializerWithStringManifest}
-import com.evolutiongaming.serialization.SerializerHelper.Bytes
+import scodec.bits.ByteVector
 
 import scala.util.Try
 
-final case class SerializedMsg(identifier: Int, manifest: String, bytes: Bytes)
+final case class SerializedMsg(identifier: Int, manifest: String, bytes: ByteVector)
 
 
 trait SerializedMsgConverter extends Extension {
@@ -25,7 +25,8 @@ object SerializedMsgConverter {
         case msg: SerializedMsg => msg
         case _                  =>
           val serializer = serialization.findSerializerFor(msg)
-          val bytes = serializer.toBinary(msg)
+          val array = serializer.toBinary(msg)
+          val bytes = ByteVector.view(array)
           val manifest = serializer match {
             case serializer: SerializerWithStringManifest => serializer.manifest(msg)
             case _ if serializer.includeManifest          => msg.getClass.getName
@@ -37,8 +38,9 @@ object SerializedMsgConverter {
 
     def fromMsg(msg: SerializedMsg) = {
       import msg._
-      if (manifest.isEmpty) serialization.deserialize(bytes, identifier, None)
-      else serialization.deserialize(bytes, identifier, manifest)
+      val array = bytes.toArray
+      if (manifest.isEmpty) serialization.deserialize(array, identifier, None)
+      else serialization.deserialize(array, identifier, manifest)
     }
   }
 }

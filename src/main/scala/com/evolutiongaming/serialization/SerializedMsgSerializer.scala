@@ -1,11 +1,11 @@
 package com.evolutiongaming.serialization
 
 import java.io.NotSerializableException
-import java.lang.{Integer => IntJ}
-import java.nio.ByteBuffer
 
 import akka.serialization.SerializerWithStringManifest
-import com.evolutiongaming.serialization.SerializerHelper._
+import scodec.bits.ByteVector
+import scodec.codecs
+import scodec.codecs._
 
 class SerializedMsgSerializer extends SerializerWithStringManifest {
 
@@ -18,16 +18,16 @@ class SerializedMsgSerializer extends SerializerWithStringManifest {
     case _                => illegalArgument(s"Cannot serialize message of ${ x.getClass } in ${ getClass.getName }")
   }
 
-  def toBinary(x: AnyRef): Bytes = {
+  def toBinary(x: AnyRef) = {
     x match {
-      case x: SerializedMsg => SerializedMsgSerializer.toBinary(x)
+      case x: SerializedMsg => SerializedMsgSerializer.toBinary(x).toArray
       case _                => illegalArgument(s"Cannot serialize message of ${ x.getClass } in ${ getClass.getName }")
     }
   }
 
-  def fromBinary(bytes: Bytes, manifest: String): AnyRef = {
+  def fromBinary(bytes: Array[Byte], manifest: String): AnyRef = {
     manifest match {
-      case Manifest => SerializedMsgSerializer.fromBinary(bytes)
+      case Manifest => SerializedMsgSerializer.fromBinary(ByteVector.view(bytes))
       case _        => notSerializable(s"Cannot deserialize message for manifest $manifest in ${ getClass.getName }")
     }
   }
@@ -39,21 +39,18 @@ class SerializedMsgSerializer extends SerializerWithStringManifest {
 
 object SerializedMsgSerializer {
 
-  def toBinary(x: SerializedMsg): Bytes = {
-    val manifest = x.manifest.getBytes(Utf8)
-    val bytes = x.bytes
-    val buffer = ByteBuffer.allocate(IntJ.BYTES + IntJ.BYTES + manifest.length + IntJ.BYTES + bytes.length)
-    buffer.putInt(x.identifier)
-    buffer.writeBytes(manifest)
-    buffer.writeBytes(bytes)
-    buffer.array()
+  private val codec = codecs.int32 ~ codecs.utf8_32 ~ codecs.int32 ~ codecs.bytes
+
+  def toBinary(x: SerializedMsg): ByteVector = {
+    val value = x.identifier ~ x.manifest ~ x.bytes.length.toInt ~ x.bytes
+    val attempt = codec.encode(value)
+    attempt.require.bytes
   }
 
-  def fromBinary(bytes: Bytes): SerializedMsg = {
-    val buffer = ByteBuffer.wrap(bytes)
-    val identifier = buffer.getInt
-    val manifest = buffer.readString
-    val msgBytes = buffer.readBytes
-    SerializedMsg(identifier, manifest, msgBytes)
+  def fromBinary(bytes: ByteVector): SerializedMsg = {
+    val attempt = codec.decode(bytes.bits)
+    val identifier ~ manifest ~ length ~ bytes1 = attempt.require.value
+    val byteVector1 = bytes1.take(length.toLong)
+    SerializedMsg(identifier, manifest, byteVector1)
   }
 }
