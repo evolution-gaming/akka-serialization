@@ -4,7 +4,6 @@ import java.io.NotSerializableException
 
 import akka.serialization.SerializerWithStringManifest
 import scodec.bits.ByteVector
-import scodec.codecs
 import scodec.codecs._
 
 class SerializedMsgSerializer extends SerializerWithStringManifest {
@@ -39,18 +38,13 @@ class SerializedMsgSerializer extends SerializerWithStringManifest {
 
 object SerializedMsgSerializer {
 
-  private val codec = codecs.int32 ~ codecs.utf8_32 ~ codecs.int32 ~ codecs.bytes
+  private val codec = (int32 :: utf8_32 :: variableSizeBytes(int32, bytes)).as[SerializedMsg]
 
   def toBinary(x: SerializedMsg): ByteVector = {
-    val value = x.identifier ~ x.manifest ~ x.bytes.length.toInt ~ x.bytes
-    val attempt = codec.encode(value)
-    attempt.require.bytes
+    codec.encode(x).require.bytes
   }
 
   def fromBinary(bytes: ByteVector): SerializedMsg = {
-    val attempt = codec.decode(bytes.bits)
-    val identifier ~ manifest ~ length ~ bytes1 = attempt.require.value
-    val byteVector1 = bytes1.take(length.toLong)
-    SerializedMsg(identifier, manifest, byteVector1)
+    codec.decode(bytes.bits).require.value
   }
 }
