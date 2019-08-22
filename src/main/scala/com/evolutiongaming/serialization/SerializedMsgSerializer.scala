@@ -3,8 +3,8 @@ package com.evolutiongaming.serialization
 import java.io.NotSerializableException
 
 import akka.serialization.SerializerWithStringManifest
+import scodec.Codec
 import scodec.bits.ByteVector
-import scodec.codecs._
 
 class SerializedMsgSerializer extends SerializerWithStringManifest {
 
@@ -38,13 +38,11 @@ class SerializedMsgSerializer extends SerializerWithStringManifest {
 
 object SerializedMsgSerializer {
 
-  private val codec = (int32 :: utf8_32 :: variableSizeBytes(int32, bytes)).as[SerializedMsg]
-
   def toBinary(x: SerializedMsg): ByteVector = {
-    codec.encode(x).require.bytes
+    Codec[SerializedMsg].encode(x).require.bytes
   }
 
   def fromBinary(bytes: ByteVector): SerializedMsg = {
-    codec.decode(bytes.bits).require.value
+    Codec[SerializedMsg].decode(bytes.bits).require.value
   }
 }
