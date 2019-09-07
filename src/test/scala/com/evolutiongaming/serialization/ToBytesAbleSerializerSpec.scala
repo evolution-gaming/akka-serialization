@@ -9,16 +9,16 @@ class ToBytesAbleSerializerSpec extends FunSuite with Matchers {
 
   test("toBinary & fromBinary for ToBytesAble.Raw") {
     val str = "value"
-    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).right.get)
+    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).toTry.get)
     val actual = toAndFromBinary(expected)
-    actual.bytes.decodeUtf8.right.get shouldEqual str
+    actual.bytes.decodeUtf8 shouldEqual Right(str)
   }
 
   test("toBinary & fromBinary for ToBytesAble.Bytes") {
     val str = "value"
-    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).right.get)
+    val expected = ToBytesAble(str)(str => ByteVector.encodeUtf8(str).toTry.get)
     val actual = toAndFromBinary(expected)
-    actual.bytes.decodeUtf8.right.get shouldEqual str
+    actual.bytes.decodeUtf8 shouldEqual Right(str)
   }
 
   def toAndFromBinary[T <: AnyRef](msg: T): T = {

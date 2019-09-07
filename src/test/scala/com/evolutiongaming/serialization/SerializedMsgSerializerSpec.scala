@@ -7,11 +7,11 @@ class SerializedMsgSerializerSpec extends FunSuite with Matchers {
 
   test("toBinary & fromBinary for SerializedMsg") {
     val bytes = "bytes"
-    val expected = SerializedMsg(1, "manifest", ByteVector.encodeUtf8(bytes).right.get)
+    val expected = SerializedMsg(1, "manifest", ByteVector.encodeUtf8(bytes).toTry.get)
     val actual = toAndFromBinary(expected)
     actual.identifier shouldEqual actual.identifier
     actual.manifest shouldEqual actual.manifest
-    actual.bytes.decodeUtf8.right.get shouldEqual bytes
+    actual.bytes.decodeUtf8 shouldEqual Right(bytes)
   }
 
   def toAndFromBinary(msg: SerializedMsg) = {

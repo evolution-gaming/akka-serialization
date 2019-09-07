@@ -5,5 +5,5 @@
 ```scala
 resolvers += Resolver.bintrayRepo("evolutiongaming", "maven")
 
-libraryDependencies += "com.evolutiongaming" %% "akka-serialization" % "1.0.0"
+libraryDependencies += "com.evolutiongaming" %% "akka-serialization" % "1.0.3"
 ```
