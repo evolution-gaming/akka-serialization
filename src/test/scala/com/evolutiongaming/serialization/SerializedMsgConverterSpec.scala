@@ -2,12 +2,13 @@ package com.evolutiongaming.serialization
 
 import akka.actor.ActorSystem
 import akka.serialization.{SerializationExtension, SerializerWithStringManifest}
-import org.scalatest.{FunSuite, Matchers}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
-class SerializedMsgConverterSpec extends FunSuite with Matchers {
+class SerializedMsgConverterSpec extends AnyFunSuite with Matchers {
 
   test("toMsg and fromMsg") {
     val system = ActorSystem(getClass.getSimpleName)
