@@ -5,7 +5,7 @@ object Dependencies {
   val scalatest = "org.scalatest" %% "scalatest" % "3.2.3"
 
   object Akka {
-    private val version = "2.6.0"
+    private val version = "2.6.8"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
   }
 

@@ -46,10 +46,8 @@ object SerializedMsgConverter {
     }
 
     def fromMsg(msg: SerializedMsg) = {
-      import msg._
-      val array = bytes.toArray
-      if (manifest.isEmpty) serialization.deserialize(array, identifier, None)
-      else serialization.deserialize(array, identifier, manifest)
+      val array = msg.bytes.toArray
+      serialization.deserialize(array, msg.identifier, msg.manifest)
     }
   }
 }
