@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
 
-  val scalatest = "org.scalatest" %% "scalatest" % "3.2.17"
+  val scalatest = "org.scalatest" %% "scalatest" % "3.2.18"
 
   object Akka {
     private val version = "2.6.8"
