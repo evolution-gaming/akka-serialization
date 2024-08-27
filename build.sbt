@@ -12,17 +12,31 @@ organizationName := "Evolution"
 
 organizationHomepage := Some(url("https://evolution.com"))
 
+crossScalaVersions := Seq("3.3.3", "2.13.12")
 scalaVersion := crossScalaVersions.value.head
 
-crossScalaVersions := Seq("2.13.12", "2.12.18")
+
+scalacOptions ++= {
+  CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((3, _))  => Seq.empty
+    case Some((2, 13)) => Seq("-Xsource:3", "-Ytasty-reader")
+    case _             => Seq.empty
+  }
+}
+//see https://github.com/scodec/scodec/issues/365
+libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
+  case Some((3, _)) =>
+    Seq(
+      Scodec.core % Optional
+    )
+  case _ =>
+    Seq(
+      Scodec.core2 % Optional
+    )
+})
+libraryDependencies ++= Seq(Akka.actor, scalatest % Test)
 
 publishTo := Some(Resolver.evolutionReleases)
-
-libraryDependencies ++= Seq(
-  Akka.actor,
-  Scodec.core,
-  Scodec.bits,
-  scalatest % Test)
 
 licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
 
