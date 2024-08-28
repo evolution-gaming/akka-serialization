@@ -16,7 +16,7 @@ import scala.util.Try
 final case class SerializedMsg(identifier: Int, manifest: String, bytes: ByteVector)
 
 object SerializedMsg {
-  @nowarn("cat=scala3-migration")
+  @nowarn("msg=package prefix of the required type")
   implicit val CodecSerializedMsg: Codec[SerializedMsg] = {
     val codec = codecs.int32 :: codecs.utf8_32 :: codecs.variableSizeBytes(codecs.int32, codecs.bytes)
     codec.as[SerializedMsg]

@@ -12,7 +12,7 @@ organizationName := "Evolution"
 
 organizationHomepage := Some(url("https://evolution.com"))
 
-crossScalaVersions := Seq("3.3.3", "2.13.14")
+crossScalaVersions := Seq("3.3.3", "2.13.14", "2.12.18")
 scalaVersion := crossScalaVersions.value.head
 
 
