@@ -18,7 +18,7 @@ scalaVersion := crossScalaVersions.value.head
 
 scalacOptions ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((3, _))  => Seq.empty
+    case Some((3, _))  => Seq("-Xsource-features:package-prefix-implicits")
     case Some((2, 13)) => Seq("-Xsource:3", "-Ytasty-reader")
     case _             => Seq.empty
   }

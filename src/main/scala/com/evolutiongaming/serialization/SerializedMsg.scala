@@ -5,6 +5,7 @@ import akka.serialization.{Serialization, SerializationExtension, SerializerWith
 import scodec.bits.ByteVector
 import scodec.{Codec, codecs}
 
+import scala.annotation.nowarn
 import scala.util.Try
 
 /** Object serialized to a binary with the metadata allowing to decode it.
@@ -15,7 +16,7 @@ import scala.util.Try
 final case class SerializedMsg(identifier: Int, manifest: String, bytes: ByteVector)
 
 object SerializedMsg {
-
+  @nowarn("cat=scala3-migration")
   implicit val CodecSerializedMsg: Codec[SerializedMsg] = {
     val codec = codecs.int32 :: codecs.utf8_32 :: codecs.variableSizeBytes(codecs.int32, codecs.bytes)
     codec.as[SerializedMsg]
