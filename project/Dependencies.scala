@@ -5,12 +5,12 @@ object Dependencies {
   val scalatest = "org.scalatest" %% "scalatest" % "3.2.17"
 
   object Akka {
-    private val version = "2.6.8"
+    private val version = "2.6.21"
     val actor = "com.typesafe.akka" %% "akka-actor" % version
   }
 
   object Scodec {
-    val core = "org.scodec" %% "scodec-core" % "1.11.7"
-    val bits = "org.scodec" %% "scodec-bits" % "1.1.14"
+    val core = "org.scodec" %% "scodec-core" % "2.3.1"
+    val core2 = "org.scodec" %% "scodec-core" % "1.11.10"
   }
 }
