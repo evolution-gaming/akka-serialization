@@ -1,10 +1,10 @@
-import Dependencies._
+import Dependencies.*
 
 name := "akka-serialization"
 
 organization := "com.evolutiongaming"
 
-homepage := Some(url("http://github.com/evolution-gaming/akka-serialization"))
+homepage := Some(url("https://github.com/evolution-gaming/akka-serialization"))
 
 startYear := Some(2018)
 
@@ -12,13 +12,12 @@ organizationName := "Evolution"
 
 organizationHomepage := Some(url("https://evolution.com"))
 
-crossScalaVersions := Seq("3.3.3", "2.13.14", "2.12.18")
+crossScalaVersions := Seq("3.3.3", "2.13.14")
 scalaVersion := crossScalaVersions.value.head
 
 
 scalacOptions ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
-    case Some((3, _))  => Seq("-Xsource-features:package-prefix-implicits")
     case Some((2, 13)) => Seq("-Xsource:3", "-Ytasty-reader")
     case _             => Seq.empty
   }
@@ -34,7 +33,10 @@ libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
       Scodec.core2 % Optional
     )
 })
-libraryDependencies ++= Seq(Akka.actor, scalatest % Test)
+libraryDependencies ++= Seq(
+  Akka.actor,
+  scalatest % Test,
+)
 
 publishTo := Some(Resolver.evolutionReleases)
 
@@ -44,7 +46,26 @@ releaseCrossBuild := true
 
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-no-link-warnings")
 
-scalacOptsFailOnWarn := Some(false)
+addCommandAlias("check", "+all versionPolicyCheck Compile/doc")
+addCommandAlias("build", "+all test package")
 
-//addCommandAlias("check", "all versionPolicyCheck Compile/doc")
-addCommandAlias("check", "show version")
+// Your next release will be binary compatible with the previous one,
+// but it may not be source compatible (ie, it will be a minor release).
+ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible
+
+//TODO: after 1.1.0 release - clear up versionPolicyIgnored section
+/*
+versionPolicyReportDependencyIssues ignored dependencies when compared to akka-serialization 1.0.5.
+All of those should not affect the library users, binary compatibility should be preserved.
+ */
+ThisBuild / versionPolicyIgnored ++= Seq(
+  //com.chuusai:shapeless_2.13: missing dependency
+  "com.chuusai" %% "shapeless",
+  //org.scala-lang.modules:scala-java8-compat_2.13:
+  //  incompatible version change from 0.9.0 to 1.0.0 (compatibility: early semantic versioning)
+  "org.scala-lang.modules" %% "scala-java8-compat",
+  //org.scodec:scodec-bits_2.13: missing dependency
+  "org.scodec" %% "scodec-bits",
+  //org.scodec:scodec-core_2.13: missing dependency
+  "org.scodec" %% "scodec-core",
+)

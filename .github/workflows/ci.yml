@@ -12,7 +12,6 @@ jobs:
         scala:
           - 2.13.14
           - 3.3.3
-          - 2.12.18
 
     steps:
       - uses: actions/checkout@v2
@@ -25,7 +24,7 @@ jobs:
           java-version: openjdk@1.11
 
       - name: build ${{ matrix.scala }}
-        run: sbt ++${{ matrix.scala }} clean coverage test
+        run: sbt ++${{ matrix.scala }} clean check coverage test
 
       - name: test coverage
         if: success()
