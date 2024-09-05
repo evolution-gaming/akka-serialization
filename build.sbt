@@ -53,19 +53,21 @@ addCommandAlias("build", "+all test package")
 // but it may not be source compatible (ie, it will be a minor release).
 ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible
 
-//TODO: after 1.1.0 release - clear up versionPolicyIgnored section
+
 /*
-versionPolicyReportDependencyIssues ignored dependencies when compared to akka-serialization 1.0.5.
+versionPolicyReportDependencyIssues ignored dependencies when compared to akka-serialization 1.1.0.
 All of those should not affect the library users, binary compatibility should be preserved.
+
+Remember to clear up after 1.1.0 release!
  */
 ThisBuild / versionPolicyIgnored ++= Seq(
+  /*
+  Examples:
+
   //com.chuusai:shapeless_2.13: missing dependency
   "com.chuusai" %% "shapeless",
   //org.scala-lang.modules:scala-java8-compat_2.13:
   //  incompatible version change from 0.9.0 to 1.0.0 (compatibility: early semantic versioning)
   "org.scala-lang.modules" %% "scala-java8-compat",
-  //org.scodec:scodec-bits_2.13: missing dependency
-  "org.scodec" %% "scodec-bits",
-  //org.scodec:scodec-core_2.13: missing dependency
-  "org.scodec" %% "scodec-core",
+   */
 )

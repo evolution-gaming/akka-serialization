@@ -10,5 +10,5 @@
 ```scala
 addSbtPlugin("com.evolution" % "sbt-artifactory-plugin" % "0.0.2")
 
-libraryDependencies += "com.evolutiongaming" %% "akka-serialization" % "1.0.3"
+libraryDependencies += "com.evolutiongaming" %% "akka-serialization" % "1.1.0"
 ```
