@@ -18,20 +18,21 @@ scalaVersion := crossScalaVersions.value.head
 scalacOptions ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 13)) => Seq("-Xsource:3", "-Ytasty-reader")
-    case _             => Seq.empty
+    case _ => Seq.empty
   }
 }
 //see https://github.com/scodec/scodec/issues/365
-libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
-  case Some((3, _)) =>
-    Seq(
-      Scodec.coreScala3 % Optional
-    )
-  case _ =>
-    Seq(
-      Scodec.coreScala2 % Optional
-    )
-})
+libraryDependencies ++=
+  (CrossVersion.partialVersion(scalaVersion.value) match {
+    case Some((3, _)) =>
+      Seq(
+        Scodec.coreScala3 % Optional,
+      )
+    case _ =>
+      Seq(
+        Scodec.coreScala2 % Optional,
+      )
+  })
 libraryDependencies ++= Seq(
   Akka.actor,
   scalatest % Test,
@@ -43,7 +44,8 @@ licenses := Seq(("MIT", uri("https://opensource.org/licenses/MIT")))
 
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-no-link-warnings")
 
-addCommandAlias("check", "+all versionPolicyCheck Compile/doc")
+addCommandAlias("check", "+all versionPolicyCheck scalafmtCheckRepo Compile/doc")
+addCommandAlias("fmt", "+scalafmtRepo")
 addCommandAlias("build", "+all test package")
 
 // Your next release will be binary compatible with the previous one,
