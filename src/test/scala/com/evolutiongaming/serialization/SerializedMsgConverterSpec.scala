@@ -2,11 +2,11 @@ package com.evolutiongaming.serialization
 
 import akka.actor.ActorSystem
 import akka.serialization.{SerializationExtension, SerializerWithStringManifest}
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.matchers.should.Matchers
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import org.scalatest.funsuite.AnyFunSuite
-import org.scalatest.matchers.should.Matchers
 
 class SerializedMsgConverterSpec extends AnyFunSuite with Matchers {
 

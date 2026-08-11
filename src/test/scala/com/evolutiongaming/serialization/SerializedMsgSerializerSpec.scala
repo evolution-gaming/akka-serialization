@@ -1,8 +1,8 @@
 package com.evolutiongaming.serialization
 
-import scodec.bits.ByteVector
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.should.Matchers
+import scodec.bits.ByteVector
 
 class SerializedMsgSerializerSpec extends AnyFunSuite with Matchers {
 
