@@ -26,11 +26,11 @@ scalacOptions ++= {
 libraryDependencies ++= (CrossVersion.partialVersion(scalaVersion.value) match {
   case Some((3, _)) =>
     Seq(
-      Scodec.core % Optional
+      Scodec.coreScala3 % Optional
     )
   case _ =>
     Seq(
-      Scodec.core2 % Optional
+      Scodec.coreScala2 % Optional
     )
 })
 libraryDependencies ++= Seq(
