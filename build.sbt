@@ -4,13 +4,13 @@ name := "akka-serialization"
 
 organization := "com.evolutiongaming"
 
-homepage := Some(url("https://github.com/evolution-gaming/akka-serialization"))
+homepage := Some(uri("https://github.com/evolution-gaming/akka-serialization"))
 
 startYear := Some(2018)
 
 organizationName := "Evolution"
 
-organizationHomepage := Some(url("https://evolution.com"))
+organizationHomepage := Some(uri("https://evolution.com"))
 
 crossScalaVersions := Seq("3.3.8", "2.13.18")
 scalaVersion := crossScalaVersions.value.head
@@ -39,7 +39,7 @@ libraryDependencies ++= Seq(
 
 publishTo := Some(Resolver.evolutionReleases)
 
-licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
+licenses := Seq(("MIT", uri("https://opensource.org/licenses/MIT")))
 
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-no-link-warnings")
 
