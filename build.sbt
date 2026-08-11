@@ -15,7 +15,6 @@ organizationHomepage := Some(url("https://evolution.com"))
 crossScalaVersions := Seq("3.3.8", "2.13.18")
 scalaVersion := crossScalaVersions.value.head
 
-
 scalacOptions ++= {
   CrossVersion.partialVersion(scalaVersion.value) match {
     case Some((2, 13)) => Seq("-Xsource:3", "-Ytasty-reader")
@@ -42,8 +41,6 @@ publishTo := Some(Resolver.evolutionReleases)
 
 licenses := Seq(("MIT", url("https://opensource.org/licenses/MIT")))
 
-releaseCrossBuild := true
-
 Compile / doc / scalacOptions ++= Seq("-groups", "-implicits", "-no-link-warnings")
 
 addCommandAlias("check", "+all versionPolicyCheck Compile/doc")
@@ -53,13 +50,6 @@ addCommandAlias("build", "+all test package")
 // but it may not be source compatible (ie, it will be a minor release).
 ThisBuild / versionPolicyIntention := Compatibility.BinaryCompatible
 
-
-/*
-versionPolicyReportDependencyIssues ignored dependencies when compared to akka-serialization 1.1.0.
-All of those should not affect the library users, binary compatibility should be preserved.
-
-Remember to clear up after 1.1.0 release!
- */
 ThisBuild / versionPolicyIgnored ++= Seq(
   /*
   Examples:
